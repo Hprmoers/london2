@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Das London-Dossier — Wahr oder erfunden?</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,900&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    color-scheme: light dark;
+    --paper:#ECE8DE;
+    --paper-2:#F5F2EA;
+    --ink:#1C2A38;
+    --ink-soft:#4a5a68;
+    --thames:#1B3A5B;
+    --pillar:#C8102E;
+    --brass:#9C6B12;
+    --brass-ink:#6b4a0c;
+    --line:#c8c0ae;
+    --line-strong:#9c9276;
+    --ok-bg:#ecefe4;
+    --no-bg:#f6e5e5;
+    box-sizing:border-box;
+    padding-top: env(safe-area-inset-top, 0px);
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --paper:#14171D;
+      --paper-2:#1c2029;
+      --ink:#E9E5D8;
+      --ink-soft:#a7b0b8;
+      --thames:#9cc2e6;
+      --pillar:#ef5a6f;
+      --brass:#d3a24a;
+      --brass-ink:#e6c07a;
+      --line:#333a44;
+      --line-strong:#4a5461;
+      --ok-bg:#1e2620;
+      --no-bg:#2a1d20;
+    }
+  }
+  :root[data-theme="dark"]{
+      --paper:#14171D;
+      --paper-2:#1c2029;
+      --ink:#E9E5D8;
+      --ink-soft:#a7b0b8;
+      --thames:#9cc2e6;
+      --pillar:#ef5a6f;
+      --brass:#d3a24a;
+      --brass-ink:#e6c07a;
+      --line:#333a44;
+      --line-strong:#4a5461;
+      --ok-bg:#1e2620;
+      --no-bg:#2a1d20;
+  }
+  *{box-sizing:inherit}
+  html{scroll-padding-top: env(safe-area-inset-top, 0px);}
+  body{
+    margin:0;
+    background:var(--paper);
+    color:var(--ink);
+    font-family:"IBM Plex Sans", system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+    line-height:1.55;
+    -webkit-font-smoothing:antialiased;
+  }
+  .wrap{max-width:760px;margin:0 auto;padding:clamp(16px,4vw,40px) clamp(14px,4vw,28px) 80px;}
+
+  /* ---------- Hero / Dossier header ---------- */
+  .dossier{
+    position:relative;
+    border:2px solid var(--ink);
+    background:
+      repeating-linear-gradient(-45deg, transparent 0 22px, color-mix(in srgb, var(--ink) 5%, transparent) 22px 24px),
+      var(--paper-2);
+    padding:clamp(20px,5vw,38px) clamp(18px,5vw,34px) clamp(24px,5vw,34px);
+    overflow:hidden;
+  }
+  .filed{
+    font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;
+    color:var(--ink-soft);border-bottom:1px solid var(--line-strong);
+    padding-bottom:8px;margin-bottom:18px;display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;
+  }
+  h1{
+    font-family:"Fraunces", Georgia, serif;
+    font-weight:900;font-optical-sizing:auto;
+    font-size:clamp(2.1rem,8vw,3.6rem);
+    line-height:.98;letter-spacing:-.01em;margin:.1em 0 .35em;color:var(--ink);
+  }
+  h1 em{font-style:italic;color:var(--thames);}
+  .lede{font-size:clamp(1rem,2.6vw,1.12rem);max-width:56ch;color:var(--ink);margin:0 0 4px;}
+  .lede .soft{color:var(--ink-soft);}
+  .stamp{
+    position:absolute;top:14px;right:-6px;
+    transform:rotate(9deg);
+    border:3px double var(--pillar);color:var(--pillar);
+    font-family:"Fraunces",serif;font-weight:900;
+    font-size:clamp(.8rem,3vw,1.05rem);letter-spacing:.06em;text-transform:uppercase;
+    padding:6px 14px;border-radius:4px;opacity:.85;
+    text-align:center;line-height:1.05;pointer-events:none;
+  }
+  .stamp small{display:block;font-size:.6em;letter-spacing:.12em;font-weight:600;}
+
+  /* ---------- How-to ---------- */
+  .howto{
+    margin:20px 0 8px;padding:14px 16px;border-left:4px solid var(--brass);
+    background:var(--paper-2);font-size:.96rem;color:var(--ink);
+  }
+  .howto b{color:var(--brass-ink);}
+
+  /* ---------- Sticky score ---------- */
+  .scorebar{
+    position:sticky;top:env(safe-area-inset-top,0px);z-index:5;
+    margin:18px -4px 8px;padding:10px 14px;
+    background:color-mix(in srgb, var(--paper) 88%, transparent);
+    backdrop-filter:blur(8px);
+    border:1px solid var(--line);border-radius:10px;
+    display:flex;align-items:center;gap:14px;flex-wrap:wrap;
+    font-size:.9rem;
+  }
+  .track{flex:1;min-width:120px;height:8px;border-radius:99px;background:var(--line);overflow:hidden;}
+  .track > i{display:block;height:100%;width:0;background:var(--thames);transition:width .35s ease;}
+  @media (prefers-reduced-motion: reduce){ .track > i{transition:none;} }
+  .scorebar .count{font-variant-numeric:tabular-nums;color:var(--ink-soft);white-space:nowrap;}
+  .scorebar .count b{color:var(--ink);}
+
+  /* ---------- Cards ---------- */
+  ol.cards{list-style:none;margin:14px 0 0;padding:0;display:flex;flex-direction:column;gap:14px;}
+  .card{
+    border:1px solid var(--line-strong);background:var(--paper-2);
+    border-radius:12px;padding:16px 16px 14px;position:relative;
+  }
+  .num{
+    font-family:"Fraunces",serif;font-weight:900;color:var(--thames);
+    font-size:1.05rem;line-height:1;margin-right:.1em;
+  }
+  .claim{font-size:1.04rem;margin:0 0 14px;display:flex;gap:10px;}
+  .claim .txt{flex:1;}
+  .btns{display:flex;gap:10px;}
+  .btns button{
+    flex:1;font:inherit;font-weight:600;cursor:pointer;
+    padding:11px 8px;border-radius:9px;border:1.5px solid var(--line-strong);
+    background:transparent;color:var(--ink);transition:transform .05s ease, background .15s, border-color .15s;
+  }
+  .btns button:hover{border-color:var(--ink);}
+  .btns button:active{transform:translateY(1px);}
+  .btns button:focus-visible{outline:3px solid var(--thames);outline-offset:2px;}
+  .btns button[aria-pressed="true"][data-v="wahr"]{background:var(--brass);border-color:var(--brass);color:#fff;}
+  .btns button[aria-pressed="true"][data-v="falsch"]{background:var(--pillar);border-color:var(--pillar);color:#fff;}
+
+  /* ---------- Reveal ---------- */
+  .card[data-state="right"]{background:var(--ok-bg);border-color:var(--brass);}
+  .card[data-state="wrong"]{background:var(--no-bg);border-color:var(--pillar);}
+  .verdict{
+    display:none;margin-top:12px;padding-top:12px;border-top:1px dashed var(--line-strong);
+    font-size:.95rem;
+  }
+  .revealed .verdict{display:block;}
+  .revealed .btns{opacity:.65;pointer-events:none;}
+  .vstamp{
+    display:inline-block;font-family:"Fraunces",serif;font-weight:900;letter-spacing:.05em;
+    text-transform:uppercase;font-size:.8rem;padding:3px 10px;border-radius:5px;
+    border:2px solid currentColor;margin-bottom:8px;transform:rotate(-2deg);
+  }
+  .vstamp.t{color:var(--brass-ink);}
+  .vstamp.f{color:var(--pillar);}
+  @media (prefers-reduced-motion: no-preference){
+    .revealed .vstamp{animation:pop .28s cubic-bezier(.2,1.4,.4,1);}
+    @keyframes pop{from{transform:rotate(-2deg) scale(.6);opacity:0;}to{transform:rotate(-2deg) scale(1);opacity:1;}}
+  }
+  .verdict .hook{color:var(--ink-soft);}
+  .verdict .real{color:var(--brass-ink);font-weight:600;}
+
+  /* ---------- Actions ---------- */
+  .actions{display:flex;gap:12px;flex-wrap:wrap;margin-top:24px;}
+  .actions button{
+    font:inherit;font-weight:600;cursor:pointer;border-radius:10px;padding:13px 22px;
+    border:2px solid var(--ink);
+  }
+  .actions button:focus-visible{outline:3px solid var(--thames);outline-offset:2px;}
+  #check{background:var(--thames);color:#fff;border-color:var(--thames);}
+  #check[disabled]{opacity:.4;cursor:not-allowed;}
+  #reset{background:transparent;color:var(--ink);}
+
+  /* ---------- Result ---------- */
+  .result{
+    display:none;margin-top:22px;border:2px solid var(--ink);background:var(--paper-2);
+    padding:22px;text-align:center;border-radius:4px;
+  }
+  .result.show{display:block;}
+  .result .big{
+    font-family:"Fraunces",serif;font-weight:900;font-size:clamp(2.4rem,10vw,3.4rem);
+    color:var(--thames);line-height:1;
+  }
+  .result .rank{font-family:"Fraunces",serif;font-style:italic;font-size:1.3rem;margin:4px 0 6px;color:var(--ink);}
+  .result .say{color:var(--ink-soft);max-width:48ch;margin:0 auto;}
+  footer{margin-top:34px;font-size:.8rem;color:var(--ink-soft);text-align:center;line-height:1.6;}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="dossier">
+    <div class="stamp">Streng absurd<small>Nur für Neugierige</small></div>
+    <div class="filed"><span>Amt für erstaunliche &amp; erfundene Tatsachen</span><span>Akte Nr. LDN-1666</span></div>
+    <h1>Wahr oder <em>erfunden?</em><br>Das London-Dossier</h1>
+    <p class="lede">30 Behauptungen über London — Geschichte, Stadt und Leute. Manche sind so verrückt, dass sie <b>stimmen</b> müssen. Andere sind frei erfunden. <span class="soft">Traust du dich zu urteilen?</span></p>
+  </header>
+
+  <div class="howto">
+    <b>So geht's:</b> Entscheide bei jeder Aussage — <b>Wahr</b> oder <b>Erfunden</b>. Wenn du alle 30 beurteilt hast, drück auf <b>Auswerten</b>. Danach verrät dir das Amt, was wirklich hinter London steckt.
+  </div>
+
+  <div class="scorebar" aria-hidden="false">
+    <span class="track"><i id="bar"></i></span>
+    <span class="count"><b id="done">0</b> / 30 beurteilt</span>
+  </div>
+
+  <ol class="cards" id="cards"></ol>
+
+  <div class="actions">
+    <button id="check" disabled>Auswerten</button>
+    <button id="reset">Neu beginnen</button>
+  </div>
+
+  <div class="result" id="result" role="status" aria-live="polite">
+    <div class="big"><span id="score">0</span> / 30</div>
+    <div class="rank" id="rankline"></div>
+    <p class="say" id="sayline"></p>
+  </div>
+
+  <footer>
+    Ein satirisches Quiz. Die „erfundenen" Aussagen sind natürlich Quatsch — die „wahren" aber verblüffend echt.<br>Wer London erklärt bekommen will, ist hier falsch. Wer London <em>entdecken</em> will, richtig.
+  </footer>
+</div>
+
+<script>
+const Q = [
+  {a:"wahr",  t:"In London ist es laut einem Gesetz von 1986 tatsächlich strafbar, einen Lachs „unter verdächtigen Umständen“ zu tragen.",
+   e:"Der Salmon Act 1986 sollte Wilderei bekämpfen — der Wortlaut über „verdächtige Umstände“ klingt bis heute herrlich absurd."},
+  {a:"falsch",t:"„Big Ben“ ist der offizielle Name des berühmten Uhrturms am Parlament.",
+   e:"„Big Ben“ ist die große Glocke im Inneren. Der Turm heißt seit 2012 offiziell <span class='real'>Elizabeth Tower</span>."},
+  {a:"wahr",  t:"Die allererste U-Bahn der Welt fuhr 1863 in London — mit dampfenden Lokomotiven unter der Erde.",
+   e:"Die Metropolitan Railway war die erste U-Bahn überhaupt. Man kann sich den Qualm in den Tunneln kaum vorstellen."},
+  {a:"wahr",  t:"In der Themse leben heute wieder Seepferdchen, Robben und gelegentlich sogar Haie.",
+   e:"In den 1950ern galt der Fluss als biologisch tot. Heute ist er einer der saubersten Großstadtflüsse Europas."},
+  {a:"falsch",t:"Die Themse floss früher rückwärts, bis die Römer sie umleiteten.",
+   e:"Sie floss nie rückwärts — aber sie ist ein <span class='real'>Gezeitenfluss</span>: zweimal täglich drückt die Nordsee sie flussaufwärts."},
+  {a:"wahr",  t:"Der Tower of London beschäftigt einen Vollzeit-„Ravenmaster“, der sich um die Raben kümmert.",
+   e:"Der Legende nach fällt die Krone, wenn die Raben den Tower verlassen — deshalb bleiben sie gut umsorgt."},
+  {a:"falsch",t:"Die Raben im Tower bekommen offizielle britische Reisepässe.",
+   e:"Pässe nicht — aber Namen, einen festen Platz und großes Ansehen. Ihr Wohl gilt als Sache von nationaler Bedeutung."},
+  {a:"wahr",  t:"Dem britischen Monarchen ist es gesetzlich verboten, das Unterhaus (House of Commons) zu betreten.",
+   e:"Seit dem Streit zwischen König und Parlament im 17. Jahrhundert bleibt die Krone dem Unterhaus fern."},
+  {a:"falsch",t:"Für die königliche Familie gibt es eine geheime U-Bahn mit einer Rutsche direkt in den Buckingham Palace.",
+   e:"Eine Rutsche gibt es nicht. Echte geheime Regierungstunnel unter London gab es aber sehr wohl."},
+  {a:"wahr",  t:"Mitten in London liegt eine winzige eigene Stadt mit eigener Polizei und eigenem Bürgermeister.",
+   e:"Die „<span class='real'>City of London</span>“ ist nur gut 2,9 km² groß — mit eigener Polizei und Lord Mayor. Kaum jemand wohnt dort."},
+  {a:"wahr",  t:"Unter London liegt ein Tunnelnetz, in dem fast 100 Jahre lang fahrerlose Züge die Post transportierten.",
+   e:"Die „Mail Rail“ beförderte Briefe unter der Stadt hindurch. Teile davon kann man heute besichtigen."},
+  {a:"falsch",t:"Die U-Bahn heißt „The Tube“, weil Fahrgäste früher wie Rohrpost durch Röhren gepustet wurden.",
+   e:"Niemand wurde gepustet. „The Tube“ heißt so wegen der runden, <span class='real'>röhrenförmigen Tunnel</span>."},
+  {a:"wahr",  t:"Der Londoner Smog war einmal so dicht, dass sogar Theater- und Kinovorstellungen abgebrochen wurden.",
+   e:"Der „Great Smog“ von 1952 forderte Tausende Todesopfer — und führte zu strengen Umweltgesetzen."},
+  {a:"falsch",t:"Der berühmte Londoner Nebel heißt „Erbsensuppe“, weil er nach Erbsensuppe roch.",
+   e:"„Pea-souper“ hieß er wegen seiner gelblich-grünen Farbe und Dichte — verursacht durch <span class='real'>Kohlerauch</span>."},
+  {a:"wahr",  t:"Der britischen Krone gehören traditionell alle nicht markierten Schwäne auf offenem Wasser.",
+   e:"Jährlich werden sie beim „<span class='real'>Swan Upping</span>“ auf der Themse gezählt — eine jahrhundertealte Tradition."},
+  {a:"wahr",  t:"Die alte London Bridge wurde Stein für Stein abgebaut und in die Wüste von Arizona verkauft.",
+   e:"1968 kaufte ein US-Unternehmer sie und ließ sie in Lake Havasu City wieder aufbauen. Dort steht sie noch heute."},
+  {a:"falsch",t:"Der Buckingham Palace lässt sich zusammenfalten und transportieren, wenn der König umzieht.",
+   e:"Natürlich nicht. Er hat aber <span class='real'>775 Räume</span> — Platz zum Umziehen gäbe es also genug."},
+  {a:"wahr",  t:"Im Buckingham Palace gibt es eine eigene Poststelle, eine Polizeiwache und im Keller einen Geldautomaten.",
+   e:"Der Geldautomat im Keller ist nur für die königliche Familie und das Personal — ein echtes Mini-Städtchen."},
+  {a:"falsch",t:"Die roten Doppeldeckerbusse sind rot, weil Rot die Lieblingsfarbe der Königin war.",
+   e:"Sie wurden rot gestrichen, damit eine Busgesellschaft aus der <span class='real'>Masse der Konkurrenz</span> heraussticht."},
+  {a:"wahr",  t:"An die Adresse 221B Baker Street kommt bis heute Post an Sherlock Holmes.",
+   e:"Dort steht ein Museum, das dem erfundenen Detektiv gewidmet ist — und seine Fanpost beantwortet."},
+  {a:"falsch",t:"Beim Bau der U-Bahn stieß man auf einen versteinerten Dinosaurier, den man „Tube-Rex“ taufte.",
+   e:"Keinen Dino — aber <span class='real'>Pestgräber, römische Ruinen und uralte verschüttete Flüsse</span>."},
+  {a:"wahr",  t:"London wurde von den Römern gegründet und hieß damals „Londinium“.",
+   e:"Um das Jahr 47/50 n. Chr. entstand die Stadt. Reste der römischen Stadtmauer sieht man noch heute."},
+  {a:"wahr",  t:"Als echte „Cockney“ gelten nur Menschen, die in Hörweite bestimmter Kirchenglocken geboren wurden.",
+   e:"Gemeint sind die „<span class='real'>Bow Bells</span>“ der Kirche St Mary-le-Bow. Der Cockney-Dialekt ist bis heute berühmt."},
+  {a:"falsch",t:"Der Trafalgar Square heißt so, weil dort Londons erster Kreisverkehr für den „traffic“ gebaut wurde.",
+   e:"Er ist nach der <span class='real'>Seeschlacht von Trafalgar (1805)</span> benannt — daher steht dort die Nelson-Säule."},
+  {a:"wahr",  t:"Bei Ebbe darf man am Themse-Ufer mit Genehmigung nach jahrhundertealten Fundstücken suchen.",
+   e:"Das nennt sich „<span class='real'>Mudlarking</span>“. Im Schlamm tauchen Münzen, Tonpfeifen und römische Scherben auf."},
+  {a:"wahr",  t:"Londons Taxifahrer:innen müssen eine Prüfung bestehen und rund 25.000 Straßen auswendig kennen.",
+   e:"Die Prüfung heißt „<span class='real'>The Knowledge</span>“ und dauert oft mehrere Jahre — ganz ohne Navi."},
+  {a:"falsch",t:"Das Riesenrad London Eye dreht sich nur einmal pro Jahr komplett, um die Kabinen zu schonen.",
+   e:"Es dreht sich langsam, aber ununterbrochen — <span class='real'>eine Runde dauert nur etwa 30 Minuten</span>."},
+  {a:"wahr",  t:"London hat so viele Bäume, dass es nach mancher Definition sogar als „Wald“ gilt.",
+   e:"Rund 8 Millionen Bäume machen London zu einem „<span class='real'>urban forest</span>“ — einem der grünsten Millionenstädte."},
+  {a:"falsch",t:"Weil es dort so oft regnet, ist ein Regenschirm in London gesetzlich Pflicht.",
+   e:"Nein. London gilt als regnerisch, bekommt pro Jahr aber <span class='real'>weniger Regen als Rom oder New York</span>."},
+  {a:"wahr",  t:"Um das Jahr 1900 war London die größte Stadt der Welt.",
+   e:"Mit über 6 Millionen Menschen war es das Zentrum eines Weltreichs — davor war Peking die Nummer eins."}
+];
+
+const RANKS = [
+  {min:27, name:"Chef:in des Amts für Wahrheiten", say:"Kaum zu täuschen. Du durchschaust London bis in die Tunnel."},
+  {min:21, name:"Themse-Lotse / Lotsin", say:"Starker Kurs durch Fakt und Fake. Ein paar Nebelbänke gab's noch."},
+  {min:14, name:"Doppeldecker-Passagier:in", say:"Solide unterwegs — Zeit, oben mitzufahren und mehr zu entdecken."},
+  {min:7,  name:"Nebelwandler:in", say:"Der Londoner Smog hatte dich fest im Griff. Nichts wie hinein in die Geschichte!"},
+  {min:0,  name:"Frisch angekommen am Bahnhof", say:"Willkommen in London! Von hier kann es nur bergauf gehen."}
+];
+
+const cards = document.getElementById('cards');
+const answers = new Array(Q.length).fill(null);
+let revealed = false;
+
+Q.forEach((q, i) => {
+  const li = document.createElement('li');
+  li.className = 'card';
+  li.innerHTML = `
+    <p class="claim"><span class="num">${i+1}.</span><span class="txt">${q.t}</span></p>
+    <div class="btns" role="group" aria-label="Deine Einschätzung zu Aussage ${i+1}">
+      <button type="button" data-v="wahr" aria-pressed="false">Wahr</button>
+      <button type="button" data-v="falsch" aria-pressed="false">Erfunden</button>
+    </div>
+    <div class="verdict"></div>`;
+  li.querySelectorAll('.btns button').forEach(btn => {
+    btn.addEventListener('click', () => {
+      if (revealed) return;
+      answers[i] = btn.dataset.v;
+      li.querySelectorAll('.btns button').forEach(b =>
+        b.setAttribute('aria-pressed', b === btn ? 'true' : 'false'));
+      updateProgress();
+    });
+  });
+  cards.appendChild(li);
+});
+
+const bar = document.getElementById('bar');
+const done = document.getElementById('done');
+const check = document.getElementById('check');
+
+function updateProgress(){
+  const n = answers.filter(a => a !== null).length;
+  done.textContent = n;
+  bar.style.width = (n/Q.length*100) + '%';
+  check.disabled = n < Q.length;
+}
+
+check.addEventListener('click', () => {
+  if (answers.some(a => a === null)) return;
+  revealed = true;
+  let score = 0;
+  const items = cards.querySelectorAll('.card');
+  items.forEach((li, i) => {
+    const correct = answers[i] === Q[i].a;
+    if (correct) score++;
+    li.classList.add('revealed');
+    li.dataset.state = correct ? 'right' : 'wrong';
+    const truth = Q[i].a === 'wahr';
+    const stampClass = truth ? 't' : 'f';
+    const stampTxt = truth ? 'Tatsächlich wahr' : 'Frei erfunden';
+    const yourWord = correct
+      ? 'Richtig erkannt!'
+      : `Knapp daneben — du hast „${answers[i] === 'wahr' ? 'Wahr' : 'Erfunden'}“ getippt.`;
+    li.querySelector('.verdict').innerHTML =
+      `<span class="vstamp ${stampClass}">${stampTxt}</span><br>
+       <span class="hook">${yourWord}</span> ${Q[i].e}`;
+  });
+
+  document.getElementById('score').textContent = score;
+  const rank = RANKS.find(r => score >= r.min);
+  document.getElementById('rankline').textContent = rank.name;
+  document.getElementById('sayline').textContent = rank.say;
+  const res = document.getElementById('result');
+  res.classList.add('show');
+  res.scrollIntoView({behavior: (matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth'), block:'center'});
+  check.disabled = true;
+});
+
+document.getElementById('reset').addEventListener('click', () => {
+  revealed = false;
+  answers.fill(null);
+  cards.querySelectorAll('.card').forEach(li => {
+    li.classList.remove('revealed');
+    li.removeAttribute('data-state');
+    li.querySelector('.verdict').innerHTML = '';
+    li.querySelectorAll('.btns button').forEach(b => b.setAttribute('aria-pressed','false'));
+  });
+  document.getElementById('result').classList.remove('show');
+  updateProgress();
+  window.scrollTo({top:0, behavior:(matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth')});
+});
+</script>
+</body>
+</html>
